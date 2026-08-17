@@ -4,6 +4,14 @@ const sessionDisplay = document.getElementById("sessions");
 let timeLeft = 25 * 60;
 let timerInterval = null;
 let isRunning = false;
+let currentMode = "work";
+let sessionsCompleted = 0;
+
+const modes = {
+    work: 25 * 60,
+    short: 5 * 60,
+    long: 15 * 60
+};
 
 function updateDisplay() {
     const minutes = Math.floor(timeLeft / 60);
@@ -26,6 +34,11 @@ function startTimer() {
             clearInterval(timerInterval);
             timerInterval = null;
             isRunning = false;
+
+            if (currentMode === "work") {
+                sessionsCompleted++;
+                sessionsDisplay.textContent = sessionsCompleted;
+            }
         }
     }, 1000);
 }
@@ -41,7 +54,18 @@ function resetTimer() {
 
     timerInterval = null;
     isRunning = false;
-    timeLeft = 25 * 60;
+    timeLeft = modes[currentMode];
+
+    updateDisplay();
+}
+
+function setMode(mode) {
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+    isRunning = false;
+    currentMode = mode;
+    timeLeft = modes[mode];
 
     updateDisplay();
 }
