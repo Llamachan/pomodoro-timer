@@ -31,16 +31,31 @@ function startTimer() {
             timeLeft--;
             updateDisplay();
         } else {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            isRunning = false;
-
-            if (currentMode === "work") {
-                sessionsCompleted++;
-                sessionsDisplay.textContent = sessionsCompleted;
-            }
+            completeSession();
         }
     }, 1000);
+}
+
+function completeSession() {
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+    isRunning = false;
+
+    if (currentMode === "work") {
+        sessionsCompleted++;
+        sessionsDisplay.textContent = sessionsCompleted;
+
+        if (sessionsCompleted % 4 === 0) {
+            setMode("long");
+        } else {
+            setMode("short");
+        }
+    } else {
+        setMode("work");
+    }
+
+    startTimer();
 }
 
 function pauseTimer() {
