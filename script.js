@@ -1,5 +1,5 @@
 const timerDisplay = document.getElementById("timer");
-const sessionDisplay = document.getElementById("sessions");
+const sessionsDisplay = document.getElementById("sessions");
 
 let timeLeft = 25 * 60;
 let timerInterval = null;
@@ -17,8 +17,8 @@ function updateDisplay() {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
 
-    //padStart - adding pads at the start to maintain uniformity in the display.
-    timerDisplay.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    timerDisplay.textContent =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
 function startTimer() {
@@ -27,13 +27,44 @@ function startTimer() {
     isRunning = true;
 
     timerInterval = setInterval(() => {
-        if (timeLeft > 0) {
-            timeLeft--;
-            updateDisplay();
-        } else {
+        timeLeft--;
+
+        updateDisplay();
+
+        if (timeLeft <= 0) {
             completeSession();
         }
     }, 1000);
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+    isRunning = false;
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+    isRunning = false;
+
+    timeLeft = modes[currentMode];
+
+    updateDisplay();
+}
+
+function setMode(mode) {
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+    isRunning = false;
+
+    currentMode = mode;
+    timeLeft = modes[mode];
+
+    updateDisplay();
 }
 
 function completeSession() {
@@ -56,33 +87,6 @@ function completeSession() {
     }
 
     startTimer();
-}
-
-function pauseTimer() {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    isRunning = false;
-}
-
-function resetTimer() {
-    clearInterval(timerInterval);
-
-    timerInterval = null;
-    isRunning = false;
-    timeLeft = modes[currentMode];
-
-    updateDisplay();
-}
-
-function setMode(mode) {
-    clearInterval(timerInterval);
-
-    timerInterval = null;
-    isRunning = false;
-    currentMode = mode;
-    timeLeft = modes[mode];
-
-    updateDisplay();
 }
 
 updateDisplay();
