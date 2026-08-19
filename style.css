@@ -73,3 +73,14 @@ p {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     font-weight: bold;
 }
+
+#completion-message {
+    min-height: 24px;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

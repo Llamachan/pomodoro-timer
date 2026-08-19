@@ -23,10 +23,12 @@
         <div id="current-mode">💻 Work Session 💻</div>
 
         <div class="controls">
-            <button onclick="startTimer()">Start</button>
-            <button onclick="pauseTimer()">Pause</button>
+            <button id="start-button" onclick="startTimer()">Start</button>
+            <button id="pause-button" onclick="pauseTimer()">Pause</button>
             <button onclick="resetTimer()">Reset</button>
         </div>
+
+        <div id="completion-message"></div>
 
         <p>Sessions completed: <span id="sessions">0</span></p>
 

@@ -6,6 +6,10 @@ const workButton = document.getElementById("work-button");
 const shortButton = document.getElementById("short-button");
 const longButton = document.getElementById("long-button");
 
+const startButton = document.getElementById("start-button");
+const pauseButton = document.getElementById("pause-button");
+const completionMessage = document.getElementById("completion-message");
+
 let timeLeft = 25 * 60;
 let timerInterval = null;
 let isRunning = false;
@@ -37,22 +41,37 @@ function startTimer() {
 
     isRunning = true;
 
+    startButton.textContent = "Running...";
+    startButton.disabled = true;
+
+    pauseButton.disabled = false;
+
+    //completionMessage.textContent = "";
+
     timerInterval = setInterval(() => {
-        timeLeft--;
+        if (timeLeft > 0) {
+            timeLeft--;
 
-        updateDisplay();
-
-        if (timeLeft <= 0) {
+            updateDisplay();
+            updatePageTitle();
+        } else {
             completeSession();
         }
     }, 1000);
 }
 
 function pauseTimer() {
+    if (!isRunning) return;
+
     clearInterval(timerInterval);
 
     timerInterval = null;
     isRunning = false;
+
+    startButton.textContent = "Resume";
+    startButton.disabled = false;
+
+    pauseButton.disabled = true;
 }
 
 function resetTimer() {
@@ -63,7 +82,15 @@ function resetTimer() {
 
     timeLeft = modes[currentMode];
 
+    startButton.textContent = "Start";
+    startButton.disabled = false;
+
+    pauseButton.disabled = false;
+
+    completionMessage.textContent = "";
+
     updateDisplay();
+    updatePageTitle();
 }
 
 function setMode(mode) {
@@ -79,6 +106,7 @@ function setMode(mode) {
 
     updateModeButtons();
     updateDisplay();
+    updatePageTitle();
 }
 function updateModeButtons() {
     workButton.classList.remove("active");
@@ -106,7 +134,10 @@ function completeSession() {
 
     if (currentMode === "work") {
         sessionsCompleted++;
+
         sessionsDisplay.textContent = sessionsCompleted;
+
+        completionMessage.textContent = "🎉 Work session complete!";
 
         if (sessionsCompleted % 4 === 0) {
             setMode("long");
@@ -114,11 +145,24 @@ function completeSession() {
             setMode("short");
         }
     } else {
+        completionMessage.textContent = "✨ Break complete!";
+
         setMode("work");
     }
+
+    updatePageTitle();
 
     startTimer();
 }
 
+function updatePageTitle() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+
+    const formattedTime =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+    document.title = `${formattedTime} — Pomodoro`;
+}
 updateDisplay();
 updateModeButtons();
